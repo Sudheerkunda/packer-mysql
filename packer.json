@@ -1,0 +1,58 @@
+{
+  "builders": [{
+    "type": "azure-arm",
+
+    "client_id": "3a3cfdbf-fa8c-407f-b436-9fd596cca5e0",
+    "client_secret": "D7dc.i8mGud8x_UbY-q_0Btp8Wk5l-VTNA",
+    "tenant_id": "af3cc87a-e9c8-4208-9233-06b1c8486fef",
+    "subscription_id": "352643b8-a27f-42a3-948d-57ab41d9ed80",
+
+    "managed_image_resource_group_name": "mysql-install",
+    "managed_image_name": "MyWindowsOSImage-unzip",
+
+    "os_type": "Windows",
+    "image_publisher": "MicrosoftWindowsServer",
+    "image_offer": "WindowsServer",
+    "image_sku": "2012-R2-Datacenter",
+
+    "communicator": "winrm",
+    "temp_compute_name": "sudheer",
+    "winrm_use_ssl": "true",
+    "winrm_insecure": "true",
+    "winrm_timeout": "3m",
+    "winrm_username": "packer",
+
+    "location": "East US",
+    "vm_size": "Standard_D2s_v3"
+  }],
+  "provisioners": [
+  {
+    "type": "powershell",
+    "inline":  
+    [
+    "New-Item -ItemType 'directory' -Path \"C:\\sudheer\""
+    ]},
+    {
+      "type": "file",
+      "source": "https://mysqlsoftware.file.core.windows.net/softwares/SQLEXPRADV_x64_ENU.zip",
+      "destination": "C:\\sudheer\\SQLEXPRADV_x64_ENU.zip"
+    },
+    {
+      "type": "file",
+      "source": "https://mysqlsoftware.file.core.windows.net/softwares/sql.ps1",
+      "destination": "C:\\sudheer\\sql.ps1"
+    },
+    {
+    "type": "powershell",
+    "inline":  
+        [
+        "Expand-Archive -LiteralPath \"C:\\sudheer\\SQLEXPRADV_x64_ENU.zip\" -DestinationPath \"C:\\sudheer\""
+        ]},
+    {
+      "type": "powershell",
+      "script":  
+          "C:\\sudheer\\sql.ps1"
+          }
+]
+
+}
